@@ -1,0 +1,32 @@
+version: '3'
+services:
+  server:
+    build:
+      context: ./nginx
+      dockerfile: Dockerfile
+    container_name: SecMiniCampGr9_server
+    tty: true
+    ports:
+      - 80:80
+    volumes:
+      # - ./react/src/app/build:/var/www
+      - ./nginx/conf.d/:/etc/nginx/conf.d/
+      - ./nginx/log:/var/log/nginx
+    # リソース制限
+    deploy:
+      resources:
+        limits:
+          cpus: '0.25'
+          memory: 300M
+
+  react:
+    build:
+      context: ./react
+      dockerfile: Dockerfile
+    container_name: SecMiniCampGr9_react
+    volumes:
+     - ./react/src/app:/usr/src/app
+    # コンテナをbackgroudで起動させておく
+    tty: true
+    ports:
+     - "3001:3001"
